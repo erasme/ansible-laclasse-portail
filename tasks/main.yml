@@ -1,0 +1,23 @@
+- name: Send notification message via Slack
+  local_action:
+    module: slack
+    domain: "{{ laclasse_slack.host }}"
+    token: "{{ laclasse_slack.token }}"
+    msg: "3...2...1... portail v{{ laclasse_portail_version }} @ {{ inventory_hostname }} :rocket: "
+    channel: "{{ laclasse_slack.channel }}"
+  tags:
+    - laclasse
+    - laclasse:portail
+
+- include: portail.yml tags=laclasse,laclasse:portail
+
+- name: Send notification message via Slack
+  local_action:
+    module: slack
+    domain: "{{ laclasse_slack.host }}"
+    token: "{{ laclasse_slack.token }}"
+    msg: "portail (version {{ git_tag.stdout }} successfully deployed on {{ inventory_hostname }} :thumbsup:"
+    channel: "{{ laclasse_slack.channel }}"
+  tags:
+    - laclasse
+    - laclasse:portail

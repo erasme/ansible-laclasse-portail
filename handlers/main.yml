@@ -1,0 +1,6 @@
+- name: Restart laclasse-portail
+  service: name=laclasse-portail state=restarted
+  notify: Check laclasse-portail
+
+- name: Check laclasse-portail
+  wait_for: port={{laclasse_portail_port}} delay=5 timeout=10

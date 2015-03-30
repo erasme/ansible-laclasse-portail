@@ -1,0 +1,5 @@
+dependencies:
+  - { role: rbenv }
+  - { role: ruby,
+      version: "{{ laclasse_portail_ruby_version }}",
+      ruby_default: "{{ laclasse_portail_ruby_version }}" }

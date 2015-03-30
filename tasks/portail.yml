@@ -1,0 +1,147 @@
+- debug: var=laclasse
+  tags: test
+
+- name: Creates deploy user
+  user:
+    name={{ laclasse_portail_deploy_user }}
+    comment="Service portail user"
+  notify: Restart laclasse-portail
+
+- name: Creates deploy directory
+  file:
+    path=~{{ laclasse_portail_deploy_user }}/laclasse-portail/
+    owner={{ laclasse_portail_deploy_user }}
+    state=directory
+  notify: Restart laclasse-portail
+
+- name: Checkout app
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  git:
+    repo={{ laclasse_portail_repos }}
+    dest=~{{ laclasse_portail_deploy_user }}/laclasse-portail/
+    version={{ laclasse_portail_version }}
+    accept_hostkey=true
+  register: new_version
+  notify: Restart laclasse-portail
+
+- name: Gets current tag
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/ && git describe --always --tag
+  changed_when: false
+  register: git_tag
+
+- debug: var=git_tag.stdout
+
+- name: Installs necessary prereqs
+  apt: pkg={{ item }} state=latest
+  with_items: laclasse_portail_packages
+  notify: Restart laclasse-portail
+
+- name: Check if a bundle is required
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'bundle check --no-color || true'
+  changed_when: bundle_required.stdout != "The Gemfile's dependencies are satisfied"
+  register: bundle_required
+
+- name: Bundles application
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'bundle --no-color'
+  when: bundle_required|changed
+  notify: Restart laclasse-portail
+
+- name: Adds version.json
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  template:
+    src="../templates/version.json.j2"
+    dest="~{{ laclasse_portail_deploy_user }}/laclasse-portail/public/version.json"
+
+- name: Clears previous template
+  file: 
+    path=/tmp/options.rb.{{ ansible_hostname }}
+    state=absent
+  delegate_to: localhost
+
+- name: Fetch configuration template
+  fetch: 
+    src=/home/{{ laclasse_portail_deploy_user }}/laclasse-portail/config/options.rb.sample
+    dest=/tmp/options.rb.{{ ansible_hostname }}
+    flat=true
+
+# - name: Adds dynamic application config
+#   sudo_user: "{{ laclasse_portail_deploy_user }}"
+#   sudo: true
+#   template:
+#     src=/tmp/options.rb.{{ ansible_hostname }}
+#     dest="~{{ laclasse_portail_deploy_user }}/laclasse-portail/config/options.rb.dynamic"
+
+- name: Adds application config
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  template:
+    src="../templates/{{ item }}.j2"
+    dest="~{{ laclasse_portail_deploy_user }}/laclasse-portail/config/{{ item }}"
+  with_items:
+    - options.rb
+    - common.rb
+    - portail.json
+    - puma.rb
+  notify: Restart laclasse-portail
+  tags: laclasse:portail:config
+
+- name: Adds client side config
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  template: src="../templates/constants.js.j2" dest="~{{ laclasse_portail_deploy_user }}/laclasse-portail/public/app/js/constants.js"
+
+- name: Binstubs puma
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc "bundle binstubs puma"
+  register: puma_has_been_binstubbed
+  changed_when: '"Skipped puma since it already exists" in puma_has_been_binstubbed'
+  notify: Restart laclasse-portail
+
+- name: Deploys init script
+  template: src="../templates/laclasse-portail.init.j2" dest=/etc/init.d/laclasse-portail mode=0770
+  notify: Restart laclasse-portail
+
+- name: Creates PID and log dirs
+  file: dest={{ item }}/laclasse-portail/
+    owner={{ laclasse_portail_deploy_user }}
+    group={{ laclasse_portail_deploy_user }}
+    mode=750
+    state=directory
+  with_items:
+    - "{{laclasse_log_parent_dir}}"
+  notify: Restart laclasse-portail
+
+- name: Registers init script
+  shell: update-rc.d laclasse-portail defaults
+  when: new_version|changed
+  notify: Restart laclasse-portail
+
+- name: Preprocesses assets
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'RACK_ENV={{ laclasse_environment }} bundle exec rake preprocess_assets:all'
+  when: new_version|changed
+  notify: Restart laclasse-portail
+
+- name: Check if firewall is opened
+  shell: iptables-save
+  register: needs_iptables
+  changed_when: needs_iptables.stdout.find("laclasse-portail") == -1
+
+- name: Open firewall
+  shell: iptables -A TCP_IN -p tcp -m tcp --dport {{ laclasse_portail_port}} -j ACCEPT -m comment --comment laclasse-portail
+  ignore_errors: true
+  when: needs_iptables | changed
+
+- name: Saves firewall
+  shell: iptables-save > {{ firewall.rules_file }}
+  ignore_errors: true
+  when: needs_iptables | changed
+

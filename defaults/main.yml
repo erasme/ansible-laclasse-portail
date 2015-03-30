@@ -1,0 +1,25 @@
+laclasse_environment: 'development'
+laclasse_log_parent_dir: /var/log
+laclasse_main_domain: "www.laclasse.com"
+laclasse_pid_dir: /var/run/
+
+laclasse_slack:
+  host: localhost
+  token: none
+  channel: none
+
+laclasse_sso_disable_ssl_verification: 'false'
+laclasse_sso_login_url: '/login'
+laclasse_sso_logout_url: '/logout'
+laclasse_sso_port: 443
+laclasse_sso_server: 'www.some.cas.server.com'
+laclasse_sso_service_validate_url: '/serviceValidate'
+laclasse_sso_ssl: 'true'
+
+laclasse_portail_repos: 'https://github.com/laclasse-com/service-portail.git'
+laclasse_portail_deploy_user: 'youshouldchangeme'
+laclasse_portail_version: 'master'
+laclasse_portail_path: '/'
+laclasse_portail_port: 9292
+laclasse_portail_packages: []
+

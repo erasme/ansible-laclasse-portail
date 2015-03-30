@@ -1,0 +1,106 @@
+# -*- encoding: utf-8 -*-
+
+{% import 'macros/url.j2' as url with context %}
+
+#
+# Fichier de configuration de l'application
+#
+
+# development ou production
+ENV[ 'RACK_ENV' ]  = '{{ laclasse_environment }}'
+
+# niveau de log de l'application
+LOG_LEVEL = Logger::INFO
+
+# Chemin absolu de l'application sur le serveur
+APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+
+# Mapping HAProxy de l'application, ex : '/v3/docs'
+APP_PATH = '{{ laclasse_services.portail.path | regex_replace('\/+$', '') }}'
+
+# Langage par défaut de l'application
+LANG = 'fr'
+
+# Clé de hachage pour les cookies Rack
+SESSION_KEY = '{{ ansible_date_time.iso8601_micro | b64encode }}'
+
+# Durée de la session en seconde (défaut 3600)
+SESSION_TIME = 3600
+
+# 
+APP_VERSION = '{{ laclasse_services.portail.version }}'
+
+# Url de l'ENT
+URL_ENT = '{{ laclasse_main_url }}'
+
+# nom du serveur d'annuaire ENT (xml-aaf académiques)
+SERVICE_ANNUAIRE_ENT = 'http://www.dev.laclasse/com/annuaire/'
+
+#
+# Configuration du Serveur d'Authentification Central CAS
+#
+module CASAUTH
+  CONFIG = {
+    host: "{{ laclasse_sso_server }}",
+    ssl: {{ laclasse_sso_ssl }},
+    port: {{ laclasse_sso_port }},
+    disable_ssl_verification: {{ laclasse_sso_disable_ssl_verification }},
+    login_url: "{{ laclasse_sso_login_url }}",
+    service_validate_url: "{{ laclasse_sso_service_validate_url }}",
+    logout_url: "{{ laclasse_sso_logout_url }}",
+    logout_saml_url: "{{ laclasse_sso_logout_saml }}",
+    full_host: "{{ laclasse.main_domain }}", # Fixes OmniAuthCAS+Rack X-Forwarded-Proto crap
+    restmod_url: '{{ laclasse_sso_restmod_url }}',    
+  }
+end
+
+#
+# Configuration du service d'annuaire de l'ENT
+#
+ANNUAIRE = {
+  url:                            '{{ url.trim_trailing_slashes(url.dedup_slashes(laclasse_main_url, "/", laclasse_annuaire_main_path)) }}' ,
+  api_key:                        "{{ laclasse_services.portail.api_key }}",
+  app_id:                         'PORTAIL',
+  api_mode:                       '{{ laclasse.services.portail.api_mode }}',
+  service_annuaire_user:          '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_user, "/") }}',
+  service_annuaire_regroupements: '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_regroupements, "/") }}',
+  service_annuaire_profils:       '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_profils, "/") }}',
+  service_annuaire_personnel:     '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_personnel, "/") }}',
+  service_annuaire_diffusionInfo: '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_diffusion_info, "/") }}',
+  service_annuaire_publipostage:  '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_publipostage, "/") }}',
+}
+
+{#
+
+#
+# Configuration du service Etherpad
+#
+ETHERPAD = {
+  url: '{{ laclasse_main_url }}{{ laclasse_services.etherpad.path }}',
+  api_key: 'Clé secrete de signature des échanges',
+  default_text: 'Vous etes a present sur etherpad. \n Celui-ci est un document collaboratif. \n'
+}
+
+
+
+#
+# Configuration du service de quizs
+#
+QUIZS = {
+  url: 'http://www.dev.laclasse.com',
+  uri_open: '/pls/education/quizz.lance_exercice?p_exo_id=',
+  uri_modif: '/pls/education/!page.laclasse?contexte=DOCUMENTS&paction=modifier_element&ptype=',
+  api_key: 'Clé secrete de signature des échanges'
+}
+
+#}
+
+#
+# Configuration du service REDIS
+#
+REDIS = {
+      host: '{{ laclasse_redis.host }}',
+      port: {{ laclasse_redis.port }},
+      # redis_root: ''
+}
+
