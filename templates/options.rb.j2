@@ -28,7 +28,7 @@ SESSION_KEY = '{{ ansible_date_time.iso8601_micro | b64encode }}'
 SESSION_TIME = 3600
 
 # 
-APP_VERSION = '{{ laclasse_services.portail.version }}'
+APP_VERSION = '{{ laclasse_portail_version }}'
 
 # Url de l'ENT
 URL_ENT = '{{ laclasse_main_url }}'
@@ -49,7 +49,7 @@ module CASAUTH
     service_validate_url: "{{ laclasse_sso_service_validate_url }}",
     logout_url: "{{ laclasse_sso_logout_url }}",
     logout_saml_url: "{{ laclasse_sso_logout_saml }}",
-    full_host: "{{ laclasse.main_domain }}", # Fixes OmniAuthCAS+Rack X-Forwarded-Proto crap
+    full_host: "{{ laclasse_main_domain }}", # Fixes OmniAuthCAS+Rack X-Forwarded-Proto crap
     restmod_url: '{{ laclasse_sso_restmod_url }}',    
   }
 end
@@ -61,13 +61,13 @@ ANNUAIRE = {
   url:                            '{{ url.trim_trailing_slashes(url.dedup_slashes(laclasse_main_url, "/", laclasse_annuaire_main_path)) }}' ,
   api_key:                        "{{ laclasse_services.portail.api_key }}",
   app_id:                         'PORTAIL',
-  api_mode:                       '{{ laclasse.services.portail.api_mode }}',
-  service_annuaire_user:          '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_user, "/") }}',
-  service_annuaire_regroupements: '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_regroupements, "/") }}',
-  service_annuaire_profils:       '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_profils, "/") }}',
-  service_annuaire_personnel:     '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_personnel, "/") }}',
-  service_annuaire_diffusionInfo: '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_diffusion_info, "/") }}',
-  service_annuaire_publipostage:  '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoints_publipostage, "/") }}',
+  api_mode:                       '{{ laclasse_services.portail.api_mode }}',
+  service_annuaire_user:          '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoint_user, "/") }}',
+  service_annuaire_regroupements: '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoint_regroupements, "/") }}',
+  service_annuaire_profils:       '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoint_profils, "/") }}',
+  service_annuaire_personnel:     '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoint_personnel, "/") }}',
+  service_annuaire_diffusionInfo: '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoint_diffusion_info, "/") }}',
+  service_annuaire_publipostage:  '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoint_publipostage, "/") }}',
 }
 
 {#
@@ -99,8 +99,8 @@ QUIZS = {
 # Configuration du service REDIS
 #
 REDIS = {
-      host: '{{ laclasse_redis.host }}',
-      port: {{ laclasse_redis.port }},
+      host: '{{ laclasse_redis_server }}',
+      port: {{ laclasse_redis_port }},
       # redis_root: ''
 }
 

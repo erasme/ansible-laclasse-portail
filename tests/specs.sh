@@ -60,7 +60,7 @@ function install() {
 
   # Copy self to /usr/local/bin/specs, replacing ROLENAME with actually tested
   # role
-  sed -e "s/_ROLENAME_/$2/" < $(readlink -f $0) | sudo tee /usr/local/bin/specs
+  sed -e "s/_ROLENAME_/$2/" < $(readlink -f $0) | sudo tee /usr/local/bin/specs > /dev/null
   sudo chmod 755 /usr/local/bin/specs
 
   # Install Git

@@ -24,7 +24,7 @@ end
 # Configuration du service d'annuaire de l'ENT
 #
 ANNUAIRE = {
-  url:      '{{ url.trim_trailing_slashes(url.dedup_slashes(laclasse.main_url, "/", laclasse_services.portail.path)) }}' ,
+  url:      '{{ url.trim_trailing_slashes(url.dedup_slashes(laclasse_main_url, "/", laclasse_services.portail.path)) }}' ,
   api_key:  "{{ laclasse_services.portail.api_key }}",
   app_id:   '{{ laclasse_services.portail.app_id }}',
   api_mode: '{{ laclasse_services.portail.api_mode }}'
@@ -42,7 +42,7 @@ end
 # Configuration du service REDIS
 #
 REDIS = {
-  host: '{{ laclasse.redis.server }}',
-  port: {{ laclasse.redis.port }},
-  redis_root: '{{ laclasse.redis.root }}'
+  host: '{{ laclasse_redis_server }}',
+  port: {{ laclasse_redis_port }},
+  redis_root: '{{ laclasse_redis_root }}'
 }
