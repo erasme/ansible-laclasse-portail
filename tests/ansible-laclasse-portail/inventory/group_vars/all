@@ -39,4 +39,8 @@ laclasse_portail_packages: []
 laclasse_portail_repos: 'https://github.com/laclasse-com/service-portail.git'
 laclasse_portail_ruby_version: 2.2.1
 
+laclasse_redis_server: 'localhost'
+laclasse_redis_port: 6379
+laclasse_redis_root: 'org:example:laclasse'
+
 ruby_deploy_user: "{{ci_user}}"

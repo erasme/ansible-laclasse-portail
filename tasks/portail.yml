@@ -143,5 +143,5 @@
 - name: Saves firewall
   shell: iptables-save > {{ firewall.rules_file }}
   ignore_errors: true
-  when: needs_iptables | changed
+  when: needs_iptables | changed and firewall is defined
 
