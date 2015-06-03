@@ -4,7 +4,7 @@
 - name: Creates deploy user
   user:
     name={{ laclasse_portail_deploy_user }}
-    comment="Service portail user"
+    comment="laclasse user"
   notify: Restart laclasse-portail
 
 - name: Creates deploy directory
