@@ -7,7 +7,7 @@ laclasse_main_url: http://www.example.org
 laclasse_pid_dir: /var/run/
 
 ## Token for daemon communication
-laclasse_puma_auth_token: exampleorg
+laclasse_puma_auth_token: somerandomtoken
 
 ## Slack reporting
 laclasse_slack:
@@ -25,14 +25,11 @@ laclasse_redis_port: 6379
 laclasse_redis_root: 'org:example:laclasse'
 
 # Other required laclasse apps parameters
-
-laclasse_annuaire_app_component: 'app'
 laclasse_annuaire_endpoint_diffusion_info: 'diffusionInfo'
 laclasse_annuaire_endpoint_personnel: 'etablissements'
 laclasse_annuaire_endpoint_profils: 'profils'
 laclasse_annuaire_endpoint_publipostage: 'publipostages'
 laclasse_annuaire_endpoint_regroupements: 'regroupements'
-laclasse_annuaire_endpoint_sso:  'sso/'
 laclasse_annuaire_endpoint_user: 'users/'
 laclasse_annuaire_main_path: 'api'
 
@@ -47,11 +44,10 @@ laclasse_sso_service_validate_url: '/serviceValidate'
 laclasse_sso_ssl: 'true'
 
 # Application parameters
-
-laclasse_portail_repos: 'https://github.com/laclasse-com/service-portail.git'
 laclasse_portail_deploy_user: 'youshouldchangeme'
-laclasse_portail_version: 'master'
+laclasse_portail_packages: []
 laclasse_portail_path: '/'
 laclasse_portail_port: 9292
-laclasse_portail_packages: []
+laclasse_portail_repos: 'https://github.com/laclasse-com/service-portail.git'
+laclasse_portail_version: 'master'
 
