@@ -49,5 +49,6 @@ laclasse_portail_packages: []
 laclasse_portail_path: '/'
 laclasse_portail_port: 9292
 laclasse_portail_repos: 'https://github.com/laclasse-com/service-portail.git'
+laclasse_portail_ruby_version: '2.2.2'
 laclasse_portail_version: 'master'
 
