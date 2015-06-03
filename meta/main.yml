@@ -20,3 +20,6 @@ dependencies:
   - role: erasme.ruby-compiled
     ruby_version: "{{ laclasse_portail_ruby_version }}"
     ruby_default: "{{ laclasse_portail_ruby_version }}"
+    ruby_deploy_user: "{{ laclasse_portail_deploy_user }}"
+    when: '"{{ laclasse_portail_ruby_version }}" != "system"'
+
