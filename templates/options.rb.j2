@@ -70,6 +70,15 @@ ANNUAIRE = {
   service_annuaire_publipostage:  '{{ url.dedup_slashes(laclasse_annuaire_app_component, "/", laclasse_annuaire_endpoint_publipostage, "/") }}',
 }
 
+#
+# Configuration du service REDIS
+#
+REDIS = {
+  host: '{{ laclasse_redis_server }}',
+  port: {{ laclasse_redis_port }},
+  redis_root: '{{ laclasse_redis_root }}'
+}
+
 {#
 
 #
