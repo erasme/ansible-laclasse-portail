@@ -41,14 +41,20 @@
 - name: Check if a bundle is required
   sudo_user: "{{ laclasse_portail_deploy_user }}"
   sudo: true
-  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'bundle check --no-color || true'
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'bundle check --no-color --path ~/bundler_shared/ || true'
   changed_when: bundle_required.stdout != "The Gemfile's dependencies are satisfied"
   register: bundle_required
+
+- name: Bundles pack application
+  sudo_user: "{{ laclasse_portail_deploy_user }}"
+  sudo: true
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'bundle pack --no-color --all --path  ~/bundler_shared/'
+  when: bundle_required|changed
 
 - name: Bundles application
   sudo_user: "{{ laclasse_portail_deploy_user }}"
   sudo: true
-  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'bundle --no-color'
+  shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/; bash -lc 'bundle --no-color --deployment --path  ~/bundler_shared/'
   when: bundle_required|changed
   notify: Restart laclasse-portail
 

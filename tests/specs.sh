@@ -87,6 +87,9 @@ function install() {
   # On travis, the test has to run straight away !
   if [ -n "${TRAVIS}" ]; then 
     exec /usr/local/bin/specs
+  else
+    # Execute environment specific stuff on non travis CI
+    [ -e ${SOURCE}/tests/prepare_environment.sh ] && ${SOURCE}/tests/prepare_environment.sh
   fi
   exit
 }
