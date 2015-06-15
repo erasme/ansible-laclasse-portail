@@ -22,7 +22,7 @@ APP_PATH = '{{ laclasse_services.portail.path | regex_replace('\/+$', '') }}'
 LANG = 'fr'
 
 # Clé de hachage pour les cookies Rack
-SESSION_KEY = '{{ ansible_date_time.iso8601_micro | b64encode }}'
+SESSION_KEY = '{{ laclasse_portail_rack_sessionkey }}'
 
 # Durée de la session en seconde (défaut 3600)
 SESSION_TIME = 3600

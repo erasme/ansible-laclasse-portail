@@ -68,7 +68,7 @@ function install() {
 
   # Fetch and install rolespec
   su_wrap 'git clone https://github.com/leucos/rolespec.git'
-  cd rolespec && git checkout feature/enhanced-rolespec-lib-path && sudo make install
+  cd rolespec && git checkout feature/centos-support && sudo make install
   
   # Create empty test directory
   su_wrap 'ROLESPEC_LIB="/usr/local/lib/rolespec" rolespec -i ~/testdir'
