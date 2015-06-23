@@ -49,7 +49,7 @@ laclasse_sso_ssl: 'true'
 laclasse_portail_deploy_user: 'youshouldchangeme'
 laclasse_portail_packages: []
 laclasse_portail_path: '/'
-laclasse_portail_port: 9292
+laclasse_portail_port: 42620
 laclasse_portail_repos: 'https://github.com/laclasse-com/service-portail.git'
 laclasse_portail_rack_sessionkey: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 laclasse_portail_ruby_version: '2.2.2'

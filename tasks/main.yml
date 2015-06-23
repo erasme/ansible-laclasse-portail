@@ -5,6 +5,7 @@
     token: "{{ laclasse_slack.token }}"
     msg: "3...2...1... portail v{{ laclasse_portail_version }} @ {{ inventory_hostname }} :rocket: "
     channel: "{{ laclasse_slack.channel }}"
+  ignore_errors: true
   tags:
     - laclasse
     - laclasse:portail
@@ -18,6 +19,7 @@
     token: "{{ laclasse_slack.token }}"
     msg: "portail (version {{ git_tag.stdout }} successfully deployed on {{ inventory_hostname }} :thumbsup:"
     channel: "{{ laclasse_slack.channel }}"
+  ignore_errors: true
   tags:
     - laclasse
     - laclasse:portail

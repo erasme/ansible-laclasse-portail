@@ -27,14 +27,14 @@ laclasse_slack:
 laclasse_sso_disable_ssl_verification: 'false'
 laclasse_sso_login_url: '/login'
 laclasse_sso_logout_url: '/logout'
-laclasse_sso_port: 443
+laclasse_sso_port: 42550
 laclasse_sso_server: 'www.some.cas.server.com'
 laclasse_sso_service_validate_url: '/serviceValidate'
 laclasse_sso_ssl: 'true'
 
 laclasse_portail_deploy_user: '{{ci_user}}'
 laclasse_portail_version: '7c9aabfe27698cc934d7b16eedfbd555f8f1f702'
-laclasse_portail_port: 9292
+laclasse_portail_port: 42620
 laclasse_portail_packages: []
 laclasse_portail_repos: 'https://github.com/laclasse-com/service-portail.git'
 laclasse_portail_ruby_version: 2.2.1
