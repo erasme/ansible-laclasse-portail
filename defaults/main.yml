@@ -34,15 +34,18 @@ laclasse_annuaire_endpoint_regroupements: 'regroupements'
 laclasse_annuaire_endpoint_user: 'users/'
 laclasse_annuaire_main_path: 'api'
 
+laclasse_services:
+  sso:
+    path: '/sso'
 
 laclasse_sso_disable_ssl_verification: 'false'
-laclasse_sso_login_url: '/login'
-laclasse_sso_logout_url: '/logout'
+laclasse_sso_login_url: '{{ laclasse_services.sso.path }}/login'
+laclasse_sso_logout_url: '{{ laclasse_services.sso.path }}/logout'
 laclasse_sso_logout_saml: '/saml/logout'
 laclasse_sso_port: 443
-laclasse_sso_restmod_url: '/restmod'
+laclasse_sso_restmod_url: '{{ laclasse_services.sso.path }}/restmod'
 laclasse_sso_server: 'www.some.cas.server.com'
-laclasse_sso_service_validate_url: '/serviceValidate'
+laclasse_sso_service_validate_url: '{{ laclasse_services.sso.path }}/serviceValidate'
 laclasse_sso_ssl: 'true'
 
 # Application parameters
