@@ -66,13 +66,13 @@
     dest="~{{ laclasse_portail_deploy_user }}/laclasse-portail/public/version.json"
 
 # - name: Clears previous template
-#   file: 
+#   file:
 #     path=/tmp/options.rb.{{ ansible_hostname }}
 #     state=absent
 #   delegate_to: localhost
 
 # - name: Fetch configuration template
-#   fetch: 
+#   fetch:
 #     src=/home/{{ laclasse_portail_deploy_user }}/laclasse-portail/config/options.rb.sample
 #     dest=/tmp/options.rb.{{ ansible_hostname }}
 #     flat=true
@@ -140,6 +140,7 @@
 - name: Check if firewall is opened
   shell: iptables-save
   register: needs_iptables
+  when: firewall is defined
   changed_when: needs_iptables.stdout.find("laclasse-portail") == -1
 
 - name: Open firewall
@@ -150,5 +151,5 @@
 - name: Saves firewall
   shell: iptables-save > {{ firewall.rules_file }}
   ignore_errors: true
-  when: needs_iptables | changed and firewall is defined
+  when: needs_iptables | changed
 
