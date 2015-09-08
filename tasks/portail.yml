@@ -29,6 +29,7 @@
 - name: Gets current tag
   shell: cd ~{{ laclasse_portail_deploy_user }}/laclasse-portail/ && git describe --always --tag
   changed_when: false
+  always_run: yes
   register: git_tag
 
 - debug: var=git_tag.stdout
